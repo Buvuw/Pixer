@@ -1,0 +1,15 @@
+html, button, div, input {
+  font-family: Noto Sans Mono;
+}
+
+.container {
+  display: flex;
+  flex: 1;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  justify-content: center;
+  align-items: center;
+}

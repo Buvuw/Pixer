@@ -1,0 +1,14 @@
+.canvas {
+  display: grid;
+  flex-shrink: 0;
+  width: 600px;
+  height: 600px;
+  border: 2px solid black;
+  margin: 0;
+  grid: 166px / auto auto auto;
+  cursor: crosshair;
+}
+
+.pixel {
+  transition: background-color 0.2s;
+}
