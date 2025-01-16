@@ -93,6 +93,16 @@ toggleGridButton.addEventListener('click', () => {
     };
   });
 
+//handle clear canvas button
+
+document.querySelector('.clear-canvas-button')
+  .addEventListener('click', () => {
+    document.querySelectorAll('.pixel')
+    .forEach((pixel) => {
+      pixel.style.backgroundColor = `white`;
+    });
+});
+
 //generate HTML for color buttons
 colors.forEach((color) => {
 selectColorsHTML += `

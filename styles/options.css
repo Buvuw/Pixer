@@ -8,7 +8,7 @@
   flex-direction: column;
 }
 
-.toggle-grid-button {
+.toggle-grid-button, .clear-canvas-button {
   font-size: 15px;
   width: 125px;
   height: 40px;
@@ -20,9 +20,20 @@
   transition: all 0.2s;
 }
 
-.toggle-grid-button:hover {
+.clear-canvas-button {
+  margin-bottom: 1rem;
+  background-color: rgb(6, 69, 205);
+}
+
+.clear-canvas-button:active {
+  background-color: rgb(220, 220, 220);
+}
+
+.toggle-grid-button:hover, .clear-canvas-button:hover {
   opacity: 0.7;
 }
+
+
 
 .grid-opacity-changer {
   margin-top: 5px;
