@@ -1,6 +1,6 @@
 import { colors, saveColors } from "./data/colors.js";
 let pixelGrid = '';
-let pixelNumber = 190;
+let pixelNumber = 24;
 let totalPixels = pixelNumber * pixelNumber;
 const canvasElement = document.querySelector('.canvas');
 let currentColor = '';
