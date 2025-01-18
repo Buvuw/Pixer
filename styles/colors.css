@@ -38,11 +38,16 @@
   left: 10px;
 }
 
-.custom-color-top-container {
+.custom-color-top-container, .custom-color-bottom-container {
   display: flex;
   width: 215px;
   justify-content: space-between;
   align-items: center;
+}
+
+.custom-color-bottom-container {
+  justify-content: space-around;
+  height: 52px;
 }
 
 .custom-color-input {
@@ -86,4 +91,29 @@
   border-radius: 10px;
   width: 60px;
   height: 50px;
+}
+
+.save-color-button, .remove-color-button {
+  width: 100px;
+  height: 35px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.save-color-button {
+  box-sizing: border-box;
+}
+
+.save-color-button:hover {
+  background-color: rgb(0, 128, 0);
+  color: white;
+  transform: scale(105%);
+}
+
+.remove-color-button:hover {
+  background-color: red;
+  color: white;
+  transform: scale(105%);
 }

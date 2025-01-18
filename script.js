@@ -1,6 +1,6 @@
-import { colors } from "./data/colors.js";
+import { colors, saveColors } from "./data/colors.js";
 let pixelGrid = '';
-let pixelNumber = 24;
+let pixelNumber = 190;
 let totalPixels = pixelNumber * pixelNumber;
 const canvasElement = document.querySelector('.canvas');
 let currentColor = '';
@@ -8,6 +8,7 @@ let selectColorsHTML = '';
 let gridOpacity;
 
 function resizePixelGrid() {
+  pixelGrid = '';
   for (let i = 1; i !== totalPixels + 1; i++) {
     pixelGrid += `
       <div data-pixel-id="${i}" class="pixel pixel${i}"></div>
@@ -35,7 +36,7 @@ const gridOpacityChangerElement = document.querySelector('.grid-opacity-changer'
 gridOpacityChangerElement
   .addEventListener('click', () => {
     gridOpacityChangerElement.value = '';
-  });
+});
 
 gridOpacityChangerElement
   .addEventListener('blur', () => {
@@ -61,8 +62,6 @@ gridOpacityChangerElement
     if (toggleGridButton.classList.contains('toggle-on')) {
       changeGridOpacity();
     };
-
-    console.log(gridOpacity);
 
 });
 
@@ -104,26 +103,35 @@ document.querySelector('.clear-canvas-button')
 });
 
 //generate HTML for color buttons
-colors.forEach((color) => {
-selectColorsHTML += `
-      <div data-color-code="${color}" class="select-color" style="background-color: ${color}"></div>
-    `
-});
 
-document.querySelector('.select-colors-container').innerHTML = selectColorsHTML;
+generateColorsHTML();
+
+function generateColorsHTML() {
+  selectColorsHTML = '';
+  colors.forEach((color) => {
+    selectColorsHTML += `
+          <div data-color-code="${color}" class="select-color select-color-${color}" style="background-color: ${color}"></div>
+        `
+    document.querySelector('.select-colors-container')
+      .innerHTML = selectColorsHTML;
+    });
+};
 
 //handle pixel coloring
 document.querySelectorAll('.pixel')
   .forEach((pixel) => {
     pixel.addEventListener('click', () => {
-      console.log(pixel.dataset.pixelId);
       const pixelId = pixel.dataset.pixelId;
       document.querySelector(`.pixel${pixelId}`).style.backgroundColor = currentColor;
     });
   });
 
 //handle selecting color
-document.querySelectorAll('.select-color')
+
+addClickEventToColors();
+
+function addClickEventToColors() {
+  document.querySelectorAll('.select-color')
   .forEach((color) => {
     color.addEventListener('click', () => {
       const colorCode = color.dataset.colorCode;
@@ -134,30 +142,50 @@ document.querySelectorAll('.select-color')
         .value = colorCode;
     });
 });
+}
 
 const customColorInput = document.querySelector('.custom-color-input');
 
+let colorInputValue;
+
 customColorInput
   .addEventListener('keyup', () => {
-    let colorInputValue = customColorInput.value;
+     colorInputValue = customColorInput.value;
 
-    //handle hex 
-   if (customColorInput.value.charAt(0) === '#' && customColorInput.value.length === 7) {
+    //handle hex and rgb
+   if ((customColorInput.value.charAt(0) === '#' && customColorInput.value.length === 7) || (colorInputValue.charAt(0) === 'r' || colorInputValue.charAt(0) === 'R') && colorInputValue.charAt(colorInputValue.length - 1) === ')') {
     currentColor = colorInputValue;
     document.querySelector('.current-color')
     .style.backgroundColor = currentColor;
    };
 
-   //handle RGB
-   if  ((colorInputValue.charAt(0) === 'r' || colorInputValue.charAt(0) === 'R') && colorInputValue.charAt(colorInputValue.length - 1) === ')') {
-    currentColor = colorInputValue;
-    document.querySelector('.current-color')
-    .style.backgroundColor = currentColor;
-    console.log(currentColor);
-   };
 });
 
+document.querySelector('.save-color-button')
+  .addEventListener('click', () => {
+    if ((customColorInput.value.charAt(0) === '#' && customColorInput.value.length === 7) || (colorInputValue.charAt(0) === 'r' || colorInputValue.charAt(0) === 'R') && colorInputValue.charAt(colorInputValue.length - 1) === ')') { 
+      colors.push(currentColor);
+      saveColors();
+      generateColorsHTML();
+      addClickEventToColors();
+    };
+});
 
+document.querySelector('.remove-color-button')
+  .addEventListener('click', () => {
+    colors.forEach((color, index) => {
+      if (color === currentColor) {
+        colors.splice(index, 1);
+        saveColors();
+        currentColor = '';
+        customColorInput.value = '';
+        document.querySelector('.current-color')
+          .style.backgroundColor = 'white';
+        generateColorsHTML();
+        addClickEventToColors();
+      }
+    });
+});
 
 function changeGridOpacity() {
   document.querySelectorAll('.pixel')
