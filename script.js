@@ -94,6 +94,7 @@ gridOpacityChangerElement
 });
 
 //handle grid button
+
 toggleGridButton.addEventListener('click', () => {
     if (toggleGridButton.classList.contains('toggle-on')) {
       toggleGridButton.innerHTML = 'Grid: OFF';
@@ -125,13 +126,18 @@ generateColorsHTML();
 
 function generateColorsHTML() {
   selectColorsHTML = '';
-  colors.forEach((color) => {
-    selectColorsHTML += `
-          <div data-color-code="${color}" class="select-color select-color-${color}" style="background-color: ${color}"></div>
-        `
+  if (colors.length > 0) {
+    colors.forEach((color) => {
+      selectColorsHTML += `
+            <div data-color-code="${color}" class="select-color select-color-${color}" style="background-color: ${color}"></div>
+          `
+      document.querySelector('.select-colors-container')
+        .innerHTML = selectColorsHTML;
+      });
+  } else {
     document.querySelector('.select-colors-container')
-      .innerHTML = selectColorsHTML;
-    });
+    .innerHTML = '';
+  }
 };
 
 //handle pixel coloring
@@ -173,6 +179,7 @@ customColorInput
      colorInputValue = customColorInput.value;
 
     //handle hex and rgb
+
    if ((customColorInput.value.charAt(0) === '#' && customColorInput.value.length === 7) || (colorInputValue.charAt(0) === 'r' || colorInputValue.charAt(0) === 'R') && colorInputValue.charAt(colorInputValue.length - 1) === ')') {
     currentColor = colorInputValue;
     document.querySelector('.current-color')
@@ -330,3 +337,18 @@ function resizePixelGridChecks() {
   } 
 
 }
+
+document.querySelector('.restore-default-colors-button')
+  .addEventListener('click', () => {
+    colors.forEach((color, index) => {
+      colors.splice(0, colors.length);
+    });
+     
+    ['#ed1c24', '#ff7f27', '#fff200', '#22b14c', '#00a2e8', '#3f48cc', '#a349a4', '#000000', '#7f7f7f', '#c3c3c3', '#FFFFFF'].forEach((color, i) => {
+      colors.push(color);
+    });
+ 
+    saveColors();
+    generateColorsHTML();
+    addClickEventToColors();
+});
