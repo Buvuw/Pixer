@@ -7,11 +7,14 @@ let currentColor = '';
 let selectColorsHTML = '';
 let gridOpacity;
 
-function resizePixelGrid() {
+//THERE MIGHT BE JQUERY
+
+function renderPixelGrid() {
   pixelGrid = '';
+  totalPixels = pixelNumber * pixelNumber;
   for (let i = 1; i !== totalPixels + 1; i++) {
     pixelGrid += `
-      <div data-pixel-id="${i}" class="pixel pixel${i}"></div>
+      <div data-pixel-id="${i}" class="pixel pixel${i}" style="background-color: white"></div>
     `
   };
 
@@ -19,15 +22,20 @@ function resizePixelGrid() {
     ${Math.floor(canvasElement.offsetHeight / pixelNumber)}px / ${' auto'.repeat(pixelNumber)};
     `;
 
-    document.querySelector('.canvas').style.grid = `
+  document.querySelector('.canvas').style.grid = `
     ${Math.floor(canvasElement.offsetHeight / pixelNumber)}px / ${' auto'.repeat(pixelNumber)}
     `;
+
+  document.querySelector('.canvas')
+    .innerHTML = pixelGrid;
+
+  addClickEventToPixels();
+
+  changeGridOpacity();
+
 };
 
-resizePixelGrid();
-
-document.querySelector('.canvas')
-  .innerHTML = pixelGrid;
+renderPixelGrid();
 
 const toggleGridButton = document.querySelector('.toggle-grid-button');
 
@@ -38,40 +46,49 @@ gridOpacityChangerElement
     gridOpacityChangerElement.value = '';
 });
 
+function handleGridOpacityInput() {
+  if (Number(gridOpacityChangerElement.value) > 100) {
+    gridOpacityChangerElement.value = 100;
+  };
+
+  if (!Number(gridOpacityChangerElement.value)) {
+    gridOpacityChangerElement.value = '';
+  };
+
+  if (gridOpacityChangerElement.value.charAt(gridOpacityChangerElement.value.length - 1) !== '%') {
+    gridOpacityChangerElement.value += '%'
+  };
+
+  if (gridOpacityChangerElement.value === '' || gridOpacityChangerElement.value === '%') {
+    gridOpacityChangerElement.value = '';
+  };
+
+  gridOpacity = gridOpacityChangerElement.value.replace('%', '');
+
+  if (toggleGridButton.classList.contains('toggle-on')) {
+    changeGridOpacity();
+  };
+
+}
+
+gridOpacityChangerElement
+  .addEventListener('keyup', (e) => {
+    if (e.code === 'Enter') {
+      gridOpacityChangerElement.blur();
+    }
+})
+
 gridOpacityChangerElement
   .addEventListener('blur', () => {
-
-    if (Number(gridOpacityChangerElement.value) > 100) {
-      gridOpacityChangerElement.value = 100;
-    };
-
-    if (!Number(gridOpacityChangerElement.value)) {
-      gridOpacityChangerElement.value = '';
-    };
-
-    if (gridOpacityChangerElement.value.charAt(gridOpacityChangerElement.value.length - 1) !== '%') {
-      gridOpacityChangerElement.value += '%'
-    };
-
-    if (gridOpacityChangerElement.value === '' || gridOpacityChangerElement.value === '%') {
-      gridOpacityChangerElement.value = '0%';
-    };
-
-    gridOpacity = gridOpacityChangerElement.value.replace('%', '');
-
-    if (toggleGridButton.classList.contains('toggle-on')) {
-      changeGridOpacity();
-    };
-
+    handleGridOpacityInput();
 });
 
 //handle grid opacity
 
 gridOpacityChangerElement
   .addEventListener('keyup', () => {
-    gridOpacity = gridOpacityChangerElement.value;
 
-    if (toggleGridButton.classList.contains('toggle-on')) {
+    if (document.querySelector('.toggle-grid-button').classList.contains('toggle-on')) {
       changeGridOpacity();
     };
 });
@@ -90,7 +107,7 @@ toggleGridButton.addEventListener('click', () => {
       toggleGridButton.classList.add('toggle-on');
       changeGridOpacity();
     };
-  });
+});
 
 //handle clear canvas button
 
@@ -118,13 +135,16 @@ function generateColorsHTML() {
 };
 
 //handle pixel coloring
-document.querySelectorAll('.pixel')
-  .forEach((pixel) => {
-    pixel.addEventListener('click', () => {
-      const pixelId = pixel.dataset.pixelId;
-      document.querySelector(`.pixel${pixelId}`).style.backgroundColor = currentColor;
-    });
+
+function addClickEventToPixels() {
+  document.querySelectorAll('.pixel')
+    .forEach((pixel) => {
+      pixel.addEventListener('click', () => {
+        const pixelId = pixel.dataset.pixelId;
+        document.querySelector(`.pixel${pixelId}`).style.backgroundColor = currentColor;
+      });
   });
+}
 
 //handle selecting color
 
@@ -192,4 +212,121 @@ function changeGridOpacity() {
   .forEach((pixel) => {
     pixel.style.border = `1px solid rgba(0, 0, 0, ${gridOpacity / 100})`
   });
+}
+
+const gridSizeInput = document.querySelector('.grid-size-input');
+
+document.querySelector('.ok-warning-button')
+  .addEventListener('click', () => {
+        resizePixelGrid();
+    closeResizeWarning();
+});
+
+document.querySelector('.cancel-warning-button')
+  .addEventListener('click', () => {
+    closeResizeWarning();
+});
+
+document.querySelector('.grid-size-confirm-button')
+  .addEventListener('click', () => {
+    checkIfPixelColored();
+});
+
+document.querySelector('.grid-size-input')
+  .addEventListener('keyup', (e) => {
+   
+    if (e.code === 'Enter') {
+      resizePixelGridChecks();
+    }   
+});
+
+document.querySelector('.grid-size-confirm-button')
+  .addEventListener('click', () => {
+      resizePixelGridChecks();
+});
+
+function checkIfPixelColored() {
+  let hasColor = false;
+
+  document.querySelectorAll('.pixel')
+    .forEach((pixel) => {
+
+      if (pixel.style.backgroundColor !== 'white') {
+        hasColor = true;
+      }
+
+    });
+
+  if (hasColor === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function showResizeWarning() {
+  document.querySelector('.resize-warning')
+    .style.display = 'flex';
+
+  document.querySelector('.blur-site')
+    .style.display = 'initial';
+}
+
+function closeResizeWarning() {
+  document.querySelector('.resize-warning')
+    .style.display = 'none';
+
+  document.querySelector('.blur-site')
+    .style.display = 'none';
+}
+
+function gridSizeInputInvalidWarning(warning) {
+
+  console.log(warning);
+
+  if (!Number(gridSizeInput.value)) {
+    let timeout;
+
+    clearTimeout(timeout);
+  
+    gridSizeInput.value = '';
+  
+    gridSizeInput.placeholder = warning;
+  
+    timeout = setTimeout(() => {
+      gridSizeInput.placeholder = 'Ex: 16 -> 16x16';
+    }, 1000);
+  }
+
+}
+
+function resizePixelGrid() {
+
+
+  if (!Number(gridSizeInput.value)) {
+    closeResizeWarning();
+  } else {
+    pixelNumber = Number(gridSizeInput.value);
+    renderPixelGrid();
+  }
+
+}
+
+function resizePixelGridChecks() {
+
+  if (Number(gridSizeInput.value) > 100) {
+    gridSizeInput.value = '';
+    gridSizeInputInvalidWarning('Limit is 100.');
+    return;
+  }
+
+  checkIfPixelColored() === true 
+  ? showResizeWarning()
+  : resizePixelGrid();
+
+  if (!Number(gridSizeInput.value)) {
+    gridSizeInputInvalidWarning('Invalid number.');
+    closeResizeWarning();
+  } 
+
 }

@@ -19,6 +19,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:wdth,wght@62.5..100,100..900&display=swap" rel="stylesheet">
 
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -43,10 +45,22 @@
 
   <div class="options">
 
-    <button class="clear-canvas-button">Clear canvas</button>
+    <div class="grid-resize-options">
 
-    <button class="toggle-grid-button">Grid: OFF</button>
-    <input class="grid-opacity-changer" placeholder="Grid opacity (%):">
+      <input placeholder="Ex: 16 -> 16x16" class="grid-size-input">
+      <button class="grid-size-confirm-button">
+        Resize grid
+      </button>
+
+    </div>
+
+    <div class="grid-opacity-options">
+      
+      <button class="toggle-grid-button toggle-on">Grid: ON</button>
+      <input class="grid-opacity-changer" placeholder="Grid opacity (%):">
+    </div>
+
+    <button class="clear-canvas-button">Clear canvas</button>
 
   </div>
 
@@ -72,6 +86,21 @@
     <div class="select-colors-container">
     </div>
 
+  </div>
+
+</div>
+
+<div class="blur-site"></div>
+
+<div class="resize-warning">
+
+  <span>Warning!!</span>
+  <span>This action will clear all your pixels.</span>
+
+  <div class="resize-warning-buttons">
+    <button class="cancel-warning-button">Cancel</button>
+
+    <button class="ok-warning-button">Ok</button>
   </div>
 
 </div>

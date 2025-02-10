@@ -11,4 +11,5 @@
 
 .pixel {
   transition: background-color 0.2s;
+  border: 1px solid rgba(0, 0, 0, 0)
 }
