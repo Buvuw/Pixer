@@ -2,6 +2,13 @@ html, button, div, input {
   font-family: Noto Sans Mono;
 }
 
+button,
+img,
+input::placeholder,
+div {
+  user-select: none;
+}
+
 body::-webkit-scrollbar {
   width: 0.5rem;
 }
