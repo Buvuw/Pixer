@@ -154,39 +154,56 @@ function addClickEventToPixels() {
 
 //handle selecting color
 
+const colorSelectorElement = document.getElementById('color-selector');
+const currentColorElement = document.querySelector('.current-color');
+const customColorInput = document.querySelector('.custom-color-input');
+let colorInputValue;
+
+
 addClickEventToColors();
 
 function addClickEventToColors() {
   document.querySelectorAll('.select-color')
-  .forEach((color) => {
-    color.addEventListener('click', () => {
-      const colorCode = color.dataset.colorCode;
-      currentColor = colorCode;
-      document.querySelector('.current-color')
-        .style.backgroundColor = colorCode;
-      document.querySelector('.custom-color-input')
-        .value = colorCode;
+    .forEach((color) => {
+      color.addEventListener('click', () => {
+        const colorCode = color.dataset.colorCode;
+        currentColor = colorCode;
+        currentColorElement.style.backgroundColor = colorCode;
+        document.querySelector('.custom-color-input')
+          .value = colorCode;
+      });
     });
-});
-}
-
-const customColorInput = document.querySelector('.custom-color-input');
-
-let colorInputValue;
+};
 
 customColorInput
   .addEventListener('keyup', () => {
      colorInputValue = customColorInput.value;
 
-    //handle hex and rgb
+  //handle hex and rgb
 
    if ((customColorInput.value.charAt(0) === '#' && customColorInput.value.length === 7) || (colorInputValue.charAt(0) === 'r' || colorInputValue.charAt(0) === 'R') && colorInputValue.charAt(colorInputValue.length - 1) === ')') {
     currentColor = colorInputValue;
-    document.querySelector('.current-color')
+    currentColorElement
     .style.backgroundColor = currentColor;
    };
 
 });
+
+// handle color selector input element
+
+colorSelectorElement.addEventListener('input', (e) => { 
+
+  const selectorValue = e.target.value;
+
+  customColorInput.value = selectorValue;
+
+  currentColor = selectorValue;
+
+  currentColorElement.style.backgroundColor = selectorValue;
+
+});
+
+currentColorElement.style.backgroundColor = document.getElementById('color-selector').value;
 
 document.querySelector('.save-color-button')
   .addEventListener('click', () => {
@@ -206,7 +223,7 @@ document.querySelector('.remove-color-button')
         saveColors();
         currentColor = '';
         customColorInput.value = '';
-        document.querySelector('.current-color')
+        currentColorElement
           .style.backgroundColor = 'white';
         generateColorsHTML();
         addClickEventToColors();
@@ -352,3 +369,15 @@ document.querySelector('.restore-default-colors-button')
     generateColorsHTML();
     addClickEventToColors();
 });
+
+// utils
+
+function numToHex(num) {
+  const hex = num.toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  const hexCode = '#' + numToHex(r) + numToHex(g) + numToHex(b);
+  return hexCode;
+}
